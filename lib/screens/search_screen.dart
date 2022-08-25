@@ -51,6 +51,11 @@ class _SearchScreenState extends State<SearchScreen> {
           child: StreamBuilder(
             stream:  _firestore.collection('users').snapshots(),
             builder: (context, snapshot){
+                    if(!snapshot.hasData){
+                      return const Center(
+                        child: LinearProgressIndicator(),
+                      );
+                    }
                     final usersData=snapshot.data!.docs;
                     List <SearchTile> userList=[];
                     for(var singleUser in usersData){

@@ -53,8 +53,6 @@ class _AudioBubbleState extends State<AudioBubble> {
         Row(
           mainAxisAlignment: widget.isCurrent? MainAxisAlignment.end : MainAxisAlignment.start,
           children: [
-            Column(
-              children: [
                 GestureDetector(
                   onTap: ()async{
                     await updateDuration();
@@ -100,9 +98,7 @@ class _AudioBubbleState extends State<AudioBubble> {
                           const SizedBox(
                             width: 10,
                           ),
-                           StatefulBuilder(
-                              builder:(context,state) {
-                                return Slider(
+                          Slider(
                                     activeColor: widget.isCurrent
                                         ? Colors.white
                                         : Colors.lightBlueAccent,
@@ -112,18 +108,14 @@ class _AudioBubbleState extends State<AudioBubble> {
                                     max: audioLength.inMilliseconds.toDouble()+1,
                                     //adding 1 ,so position never gets bigger than duration even after the song ends and color does not become grey
                                     onChanged: (value) async {
-                                      state(() {});
-                                    });
-                              }
-                           ),
+                                      setState(() {});
+                                    }),
                         ],
                       )
                   ),
                 )
-              ],
+              ]
             )
-          ],
-        ),
       ],
     );
   }

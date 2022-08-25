@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class MessageBubble extends StatelessWidget {
   MessageBubble(
-      {required this.text, required this.email, required this.isCurrent,required this.otherUser});
+      {super.key, required this.text, required this.email, required this.isCurrent,required this.otherUser});
 
   late String text;
   late String email;

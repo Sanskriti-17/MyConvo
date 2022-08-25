@@ -13,10 +13,12 @@ import 'screens/auth/registration_screen.dart';
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  return runApp(Messenger());
+  return runApp(const Messenger());
 }
 
 class Messenger extends StatelessWidget {
+  const Messenger({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -31,7 +33,7 @@ class Messenger extends StatelessWidget {
           ChatScreen.id : (context)=> ChatScreen(),
           SearchScreen.id : (context)=> const SearchScreen(),
           SetAvatarScreen.id : (context)=> const SetAvatarScreen(),
-          ProfileScreen.id : (context)=>ProfileScreen(),
+          ProfileScreen.id : (context)=>const ProfileScreen(),
         },
       ),
     );

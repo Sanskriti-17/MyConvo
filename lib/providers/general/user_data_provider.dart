@@ -4,10 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserDataProvider extends ChangeNotifier{
-  getCurrentUserUsername(String docId)async{
-    return await FirebaseFirestore.instance.collection('users').doc(docId).get().then((value) => value['username']);
-  }
   get getCurrentUserDocId=>FirebaseAuth.instance.currentUser!.uid;
   get getAllUserData {return FirebaseFirestore.instance.collection('users').snapshots();}
-  getSingleUserData(String docId)=>FirebaseFirestore.instance.collection('users').doc(docId).snapshots();
+  getSingleUserData(String docId)=>FirebaseFirestore.instance.collection('users').doc(docId);
 }

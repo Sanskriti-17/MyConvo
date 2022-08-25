@@ -18,6 +18,11 @@ const kMessageContainerDecoration = BoxDecoration(
   ),
 );
 
+const kAudioTextFieldDecoration=InputDecoration(
+  filled: true,
+  fillColor: Colors.lightBlueAccent,
+);
+
 const kInputButtonStyle=InputDecoration(
   hintText: 'Enter your Data',
   hintStyle: TextStyle(

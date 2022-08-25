@@ -35,10 +35,9 @@ class SearchTile extends StatelessWidget {
         trailing: GestureDetector(
           onTap: (){
             final myEmail=getCurrentUserEmailID();
-            final myUserName=Provider.of<UserDataProvider>(context,listen: false).getCurrentUserUsername;
             chatroomId=Provider.of<ChatRoomProvider>(context,listen: false).setChatroomID(myEmail, email);
             Map<String,dynamic> chatroomData={
-              'array' : [myUserName,userName],
+              'array' : [myEmail,email],
             };
             Provider.of<ChatRoomProvider>(context,listen: false).createChatroom(chatroomId, chatroomData);
             Provider.of<ChatRoomProvider>(context,listen: false).setOtherUserImg(imgLink);
