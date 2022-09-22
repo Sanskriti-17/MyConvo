@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:messenger/providers/general/chatroom_provider.dart';
-import 'package:messenger/screens/Welcome_Screen.dart';
 import 'package:messenger/widgets/search_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
-
-import 'Personal_info_screen.dart';
+import 'personal_info_screen.dart';
+import 'package:messenger/services/navigation_management.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -42,7 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 color: Colors.white,
               ),
               onPressed: () async{
-               Navigator.pushNamed(context, ProfileScreen.id);
+               Navigation.intentNamed(context, ProfileScreen.id);
               },
             )
           ],
@@ -53,7 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
             builder: (context, snapshot){
                     if(!snapshot.hasData){
                       return const Center(
-                        child: LinearProgressIndicator(),
+                        child: CircularProgressIndicator(),
                       );
                     }
                     final usersData=snapshot.data!.docs;
@@ -64,6 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
                          userList.add(SearchTile(
                              imgLink: singleUser.get('profileImg'),
                              userName: singleUser.get('username'),
+                             userId: singleUser.id,
                              email: singleUser.get('sender')));
                        }
                       }

@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:messenger/constants.dart';
-import 'package:messenger/screens/set-avatar-screen.dart';
+import 'package:messenger/screens/entry%20screen/set-avatar-screen.dart';
 import 'package:messenger/widgets/Button_properties.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger/screens/auth/login_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:provider/provider.dart';
-
-import '../../providers/general/user_data_provider.dart';
+import 'package:messenger/services/navigation_management.dart';
+import '../../services/data management/data_management.dart';
+import '../../services/data management/stored_string_collection.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -29,8 +29,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String email;
   late String password;
   late String docId;
-  List<String> specialList = ['Blind', 'Deaf', 'None'];
-  String specialAbility = 'None';
+  List<String> specialList = ['blind', 'deaf', 'mute', 'none'];
+  String specialAbility = 'none';
   late Map<String, dynamic> userData;
   final _formKey = GlobalKey<FormState>();
   final AutovalidateMode _autoValidate = AutovalidateMode.onUserInteraction;
@@ -39,34 +39,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   TextEditingController usernameCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
-
-  _registerUser() async {
-    try {
-      print(password);
-      print(email);
-
-
-      final newUser = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-        if (newUser != null) {
-        userData = {
-          'firstname': firstname,
-          'lastname': lastname,
-          'ability': specialAbility,
-          'username': username,
-          'sender': email,
-          'profileImg': 'null',
-        };
-        final docId=_auth.currentUser!.uid;
-        await _firebase
-            .collection('users').doc(docId)
-            .set(userData);
-      }
-
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +180,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         });
                         if (_formKey.currentState!.validate()) {
                           await _registerUser();
-                          Navigator.pushNamed(context, SetAvatarScreen.id);
                         } else {
                           setState(() => _autoValidate);
                         }
@@ -223,7 +194,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           style: TextStyle(color: Colors.black87)),
                       TextButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(
+                            Navigation.pushNamedAndReplace(
                                 context, LoginScreen.id);
                           },
                           child: const Text(
@@ -241,5 +212,47 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  _registerUser() async {
+    try {
+      print(password);
+      print(email);
+
+
+      final UserCredential newUser = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      if (newUser != null) {
+        userData = {
+          'firstname': firstname,
+          'lastname': lastname,
+          'ability': specialAbility,
+          'username': username,
+          'sender': email,
+          'profileImg': 'null',
+        };
+        final docId=_auth.currentUser!.uid;
+        await _firebase
+            .collection('users').doc(docId)
+            .set(userData);
+
+        Navigation.intentNamed(context, SetAvatarScreen.id);
+        await DataManagement.storeStringData(StoredString.userAuthId, _auth.currentUser!.uid);
+      }
+
+    } catch (e) {
+      print(e);
+      _snackBar(e.toString());
+    }
+  }
+
+  _snackBar(String error){
+    final snackBar=SnackBar(
+      content: Text(error,style: const TextStyle(color: Colors.white)),
+      backgroundColor: Colors.redAccent,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
   }
 }

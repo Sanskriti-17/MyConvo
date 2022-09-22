@@ -7,7 +7,10 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:messenger/screens/search_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import '../widgets/Button_properties.dart';
+import '../../widgets/Button_properties.dart';
+import 'package:messenger/services/navigation_management.dart';
+
+
 class SetAvatarScreen extends StatefulWidget {
  const SetAvatarScreen({super.key});
   static const id='set_avatar_screen';
@@ -24,7 +27,7 @@ class _SetAvatarScreenState extends State<SetAvatarScreen> {
 
   Future imagePicker({required ImageSource source}) async {
     try {
-      Navigator.pop(context);
+      Navigation.remove(context);
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
       final temp = File(image.path);
@@ -129,7 +132,7 @@ class _SetAvatarScreenState extends State<SetAvatarScreen> {
                     }catch(e){
                       print(e);
                     }
-                    Navigator.pushNamedAndRemoveUntil(context, SearchScreen.id,(route) => false);
+                    Navigation.intentStraightNamed(context, SearchScreen.id);
                     setState(() {
                       spinner = false;
                     });

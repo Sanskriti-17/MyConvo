@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:messenger/screens/Welcome_Screen.dart';
+import 'package:messenger/screens/entry%20screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:messenger/services/data%20management/data_management.dart';
+import 'package:messenger/services/navigation_management.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -50,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                          IconButton(
                              onPressed: (){
-                               Navigator.pop(context);
+                               Navigation.remove(context);
                              }, icon: const Icon(Icons.arrow_back,color: Colors.white,size: 35,)),
                          Center(
                            child: CircleAvatar(
@@ -90,9 +93,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ],
               ),
               ListTile(
-                onTap: (){
+                onTap: ()async{
                   FirebaseAuth.instance.signOut();
-                  Navigator.pushNamed(context, WelcomeScreen.id);
+                  DataManagement.clear();
+                  Navigation.intentStraightNamed(context, WelcomeScreen.id);
                 },
                 tileColor: Colors.white,
                 //shape: const RoundedRectangleBorder(side: BorderSide(color: Colors.lightBlueAccent,width: 2)),

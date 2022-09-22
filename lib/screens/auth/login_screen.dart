@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:messenger/services/data%20management/data_management.dart';
+import 'package:messenger/services/data%20management/stored_string_collection.dart';
 import'package:messenger/widgets/Button_properties.dart';
 import 'package:messenger/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:messenger/screens/search_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:messenger/services/navigation_management.dart';
 import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,16 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailCtrl=TextEditingController();
   TextEditingController passwordCtrl=TextEditingController();
 
-  Future _logInUser()async{
-    try {
-      final oldUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      if(oldUser!=null){
-        Navigator.popAndPushNamed(context, SearchScreen.id);
-      }
-    }catch(e){
-      print(e);
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     TextButton(
                         onPressed: (){
-                          Navigator.pushReplacementNamed(context, RegistrationScreen.id);
+                          Navigation.pushNamedAndReplace(context, RegistrationScreen.id);
                         },
                         child: const Text('sign up',
                           style: TextStyle(
@@ -129,5 +123,28 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future _logInUser()async{
+    try {
+      final oldUser = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      if(oldUser!=null){
+        Navigation.intentStraightNamed(context, SearchScreen.id);
+        await DataManagement.storeStringData(StoredString.userAuthId, _auth.currentUser!.uid);
+      }
+    }catch(e){
+      print(e);
+      _snackBar(e.toString());
+    }
+  }
+
+  _snackBar(String error){
+    final snackBar=SnackBar(
+        content: Text(error,style: const TextStyle(color: Colors.white)),
+        backgroundColor: Colors.redAccent,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
   }
 }

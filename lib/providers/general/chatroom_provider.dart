@@ -5,6 +5,13 @@ class ChatRoomProvider extends ChangeNotifier {
  String _chatroomId = 'user1\_user2';
   Map<String, dynamic> _chatroomData={};
   String? _otherUserImg;
+  bool isNew=false;
+
+  isNewToggle(){
+    isNew=!isNew;
+    notifyListeners();
+    return isNew;
+  }
 
   setChatroomID(String user1, String user2) {
     if (user1.substring(0, 1).codeUnitAt(0) >
@@ -36,19 +43,15 @@ class ChatRoomProvider extends ChangeNotifier {
 
   get otherUserImg=>_otherUserImg;
 
-  createChatroom(String chatroomId, Map<String, dynamic> chatroomData) async {
-    _chatroomId = chatroomId;
-    _chatroomData = chatroomData;
-    print(_chatroomId);
+  static createChatroom(String chatroomId, Map<String, dynamic> chatroomData) async {
+    print(chatroomId);
     FirebaseFirestore.instance
         .collection('messages')
-        .doc(_chatroomId)
+        .doc(chatroomId)
         .collection('chats');
-    notifyListeners();
     return await FirebaseFirestore.instance
         .collection('messages')
-        .doc(_chatroomId)
+        .doc(chatroomId)
         .set(chatroomData);
-
   }
 }
